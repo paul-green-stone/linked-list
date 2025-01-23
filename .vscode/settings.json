@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "_list.h": "c",
+        "stdlib.h": "c",
+        "data_type.h": "c",
+        "_data_type.h": "c",
+        "stdarg.h": "c"
+    }
+}
