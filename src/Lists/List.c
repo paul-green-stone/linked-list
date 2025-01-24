@@ -72,9 +72,9 @@ size_t List_size(const void* _list) {
 void* List_insert_first(void* _list, const void* _element) {
 
     const struct Linked_List_Type* const* list = _list;
-    const struct Element_Type* const* element_type_ptr = _element;
+    const struct Data_Type* const* element_type_ptr = _element;
 
-    char d = (*(struct Element_Type**) element_type_ptr == String) || (*(struct Element_Type**) element_type_ptr == Integer) || (*(struct Element_Type**) element_type_ptr == Float);
+    char d = (*(struct Data_Type**) element_type_ptr == String) || (*(struct Data_Type**) element_type_ptr == Integer) || (*(struct Data_Type**) element_type_ptr == Float);
 
     if (!d) {
         return NULL;
@@ -116,9 +116,9 @@ void List_print(const void* _list) {
 void* List_insert_last(void* _list, const void* _element) {
 
     const struct Linked_List_Type* const* list = _list;
-    const struct Element_Type* const* element_type_ptr = _element;
+    const struct Data_Type* const* element_type_ptr = _element;
 
-    char d = (*(struct Element_Type**) element_type_ptr == String) || (*(struct Element_Type**) element_type_ptr == Integer) || (*(struct Element_Type**) element_type_ptr == Float);
+    char d = (*(struct Data_Type**) element_type_ptr == String) || (*(struct Data_Type**) element_type_ptr == Integer) || (*(struct Data_Type**) element_type_ptr == Float);
 
     if (!d) {
         return NULL;

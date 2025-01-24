@@ -73,5 +73,4 @@ static struct Data_Type _String = {
 
 const void* String = &_String;
 
-
 /* ================================================================ */

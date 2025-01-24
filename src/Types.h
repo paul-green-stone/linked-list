@@ -6,10 +6,13 @@
 /* A singly-linked list data type */
 extern const void* List;
 
+/* A string data type */
 extern const void* String;
 
+/* An Integer data type */
 extern const void* Integer;
 
+/* A float data type */
 extern const void* Float;
 
 /* ================================================================ */
