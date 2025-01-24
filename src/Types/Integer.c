@@ -27,9 +27,9 @@ static void* _Integer_constructor(void* _self, va_list* app) {
 
 /* ================================ */
 
-static void _Integer_print(void* _self) {
+static void _Integer_print(const void* _self) {
 
-    struct __Integer* self = _self;
+    const struct __Integer* self = _self;
 
     printf("%d", self->data);
 }
@@ -38,7 +38,7 @@ static void _Integer_print(void* _self) {
 
 static int _Integer_compare(const void* _self, va_list* app) {
 
-    struct __Integer* self = _self;
+    const struct __Integer* self = _self;
     int integer = va_arg(*app, int);
 
     return (self->data - integer);

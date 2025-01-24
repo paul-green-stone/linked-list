@@ -4,6 +4,7 @@
 
 #include "_List.h"
 #include "../Types/_Data_Type.h"
+#include "../Data_Type.h"
 
 /* ================================================================ */
 
@@ -98,7 +99,7 @@ static void* destructor(void* _self) {
 
     while (self->count > 0) {
         element = remove_first(_self);
-        Element_delete(element);
+        Data_delete(element);
     }
 
     return _self;
@@ -112,7 +113,7 @@ static void* destructor(void* _self) {
 void* insert_first(void* _self, const void* _element) {
 
     struct __List* self = _self;
-    struct __Node* node = Node_new(_element);
+    struct __Node* node = Node_new((void*) _element);
 
     if (self->count == 0) {
         self->head = self->tail = node;
@@ -124,7 +125,7 @@ void* insert_first(void* _self, const void* _element) {
 
     self->count++;
 
-    return _element;
+    return (void*) _element;
 }
 
 /* ================================ */
@@ -144,7 +145,7 @@ void print(const void* _self) {
 
     for (i = 0, node = self->head; i < self->count; i++, node = node->next) {
 
-        Element_print(node->data);
+        Data_print(node->data);
 
         if (i + 1 != self->count) {
             printf(" -> ");
@@ -162,7 +163,7 @@ void print(const void* _self) {
 void* insert_last(void* _self, const void* element) {
 
     struct __List* self = _self;
-    struct __Node* node = Node_new(element);
+    struct __Node* node = Node_new((void*) element);
 
     if (self->count == 0) {
         self->head = self->tail = node;
@@ -174,7 +175,7 @@ void* insert_last(void* _self, const void* element) {
 
     self->count++;
 
-    return element;
+    return (void*) element;
 }
 
 /* ================================ */
@@ -215,7 +216,7 @@ void* remove_last(void* _self) {
 
 void* find(const void* _self, const void* type, va_list* app) {
 
-    struct __List* self = _self;
+    const struct __List* self = _self;
     struct __Node* node = NULL;
 
     size_t i = 0;

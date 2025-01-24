@@ -30,9 +30,9 @@ static void* _Float_constructor(void* _self, va_list* app) {
 
 /* ================================ */
 
-static void _Float_print(void* _self) {
+static void _Float_print(const void* _self) {
 
-    struct __Float* self = _self;
+    const struct __Float* self = _self;
 
     printf("%.2f", self->data);
 }
@@ -41,7 +41,7 @@ static void _Float_print(void* _self) {
 
 static int _Float_compare(const void* _self, va_list* app) {
 
-    struct __Float* self = _self;
+    const struct __Float* self = _self;
     float f = va_arg(*app, double);
 
     return !((fabs(self->data - f)) < THRESHOLD);

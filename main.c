@@ -5,6 +5,7 @@
 
 #include "List.h"
 #include "src/Types.h"
+#include "src/Data_Type.h"
 
 #define SIZE 1000
 
@@ -17,28 +18,28 @@ int main(int argc, char** argv) {
     //     List_insert_first(list, Element_new(Integer, rand() % 1000000));
     // }
 
-    List_insert_first(list, Element_new(String, "Maria"));
-    List_insert_first(list, Element_new(String, "Elizabeth"));
-    List_insert_first(list, Element_new(String, "Katherine"));
+    List_insert_first(list, Data_new(String, "Maria"));
+    List_insert_first(list, Data_new(String, "Elizabeth"));
+    List_insert_first(list, Data_new(String, "Katherine"));
 
     void* s = List_find(list, String, "Elizabeth");
 
     if (s != NULL) {
-        Element_print(s);
+        Data_print(s);
         puts("");
     }
 
     s = List_find(list, String, "Maria");
     if (s != NULL) {
-        Element_print(s);
+        Data_print(s);
         puts("");
     }
 
-    List_insert_last(list, Element_new(Float, -1.123));
+    List_insert_last(list, Data_new(Float, -1.123));
 
-    s = List_find(list, Float, -1.124);
+    s = List_find(list, Float, -1.12300003);
     if (s != NULL) {
-        Element_print(s);
+        Data_print(s);
         puts("");
     }
 

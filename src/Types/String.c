@@ -44,9 +44,9 @@ static void* _String_destructor(void* _self) {
 
 /* ================================ */
 
-static void _String_print(void* _self) {
+static void _String_print(const void* _self) {
 
-    struct __String* self = _self;
+    const struct __String* self = _self;
 
     printf("%s", self->data);
 }
@@ -55,7 +55,7 @@ static void _String_print(void* _self) {
 
 static int _String_compare(const void* _self, va_list* app) {
 
-    struct __String* self = _self;
+    const struct __String* self = _self;
     const char* string = va_arg(*app, const char*);
 
     return (strcmp(self->data, string));

@@ -12,7 +12,7 @@ struct Data_Type {
 
     void* (*constructor)(void* self, va_list* app);
     void* (*destructor)(void* self);
-    void (*how_to_print_it)(void* self);
+    void (*how_to_print_it)(const void* self);
     int (*compare)(const void* self, va_list* app);
 };
 

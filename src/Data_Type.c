@@ -8,7 +8,7 @@
 /* ======================== IMPLEMENTATION ======================== */
 /* ================================================================ */
 
-void* Element_new(const void* _dt, ...) {
+void* Data_new(const void* _dt, ...) {
 
     const struct Data_Type* dt = _dt;
     void* elm = NULL;
@@ -33,7 +33,7 @@ void* Element_new(const void* _dt, ...) {
 
 /* ================================ */
 
-void Element_delete(void* dt) {
+void Data_delete(void* dt) {
 
     const struct Data_Type** element_type_ptr = dt;
 
@@ -46,9 +46,9 @@ void Element_delete(void* dt) {
 
 /* ================================ */
 
-void Element_print(const void* dt) {
+void Data_print(const void* dt) {
 
-    const struct Data_Type** element_type_ptr = dt;
+    struct Data_Type** element_type_ptr = (void*) dt;
 
     if ((dt != NULL) && (*element_type_ptr != NULL) && ((*element_type_ptr)->how_to_print_it != NULL)) {
         (*element_type_ptr)->how_to_print_it(dt);

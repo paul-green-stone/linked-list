@@ -154,7 +154,7 @@ void* List_find(const void* _list, const void* type, ...) {
     if ((_list != NULL) && (*list != NULL) && ((*list)->find != NULL)) {
         
         va_list ap;
-        va_start(ap, _list);
+        va_start(ap, type);
 
         result = (*list)->find(list, type, &ap);
 
