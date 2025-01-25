@@ -10,7 +10,7 @@
 
 struct __Float {
 
-    /* struct Element_Type */
+    /* struct Data_Type */
     const void* element_type;
 
     float data;

@@ -43,6 +43,14 @@ int main(int argc, char** argv) {
         puts("");
     }
 
+    List_insert_last(list, Data_new(Person, "Jack", 54));
+
+    s = List_find(list, Person, "Jack", 54);
+    if (s != NULL) {
+        Data_print(s);
+        puts("");
+    }
+
     List_print(list);
 
     List_delete(list);

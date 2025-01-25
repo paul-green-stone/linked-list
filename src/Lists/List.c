@@ -74,7 +74,7 @@ void* List_insert_first(void* _list, const void* _element) {
     const struct Linked_List_Type* const* list = _list;
     const struct Data_Type* const* element_type_ptr = _element;
 
-    char d = (*(struct Data_Type**) element_type_ptr == String) || (*(struct Data_Type**) element_type_ptr == Integer) || (*(struct Data_Type**) element_type_ptr == Float);
+    char d = (*(struct Data_Type**) element_type_ptr == String) || (*(struct Data_Type**) element_type_ptr == Integer) || (*(struct Data_Type**) element_type_ptr == Float) || (*(struct Data_Type**) element_type_ptr == Person);
 
     if (!d) {
         return NULL;
@@ -118,7 +118,7 @@ void* List_insert_last(void* _list, const void* _element) {
     const struct Linked_List_Type* const* list = _list;
     const struct Data_Type* const* element_type_ptr = _element;
 
-    char d = (*(struct Data_Type**) element_type_ptr == String) || (*(struct Data_Type**) element_type_ptr == Integer) || (*(struct Data_Type**) element_type_ptr == Float);
+    char d = (*(struct Data_Type**) element_type_ptr == String) || (*(struct Data_Type**) element_type_ptr == Integer) || (*(struct Data_Type**) element_type_ptr == Float) || (*(struct Data_Type**) element_type_ptr == Person);
 
     if (!d) {
         return NULL;

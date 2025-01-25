@@ -15,6 +15,8 @@ extern const void* Integer;
 /* A float data type */
 extern const void* Float;
 
+extern const void* Person;
+
 /* ================================================================ */
 
 #endif /* _DATA_TYPES_H */
