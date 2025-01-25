@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>Linked Lists Cheat Sheet</title>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" />
+    </head>
+    <!-- -->
+    <body>
+        <section class="hero is-halfheight card" style="background-color: rgb(250, 250, 250);">
+            <div class="hero-body">
+                <div>
+                    <h1 class="title is-1">Linked List Cheat Sheet</h1>
+                    <h2 class="subtitle is-3">A Gentle Introduction to Writing a Custom Data Type</h2>
+                </div>
+            </div>
+        </section>
+
+        <section class="section content">
+
+            <h3 class="block is-size-3">Introduction</h3>
+
+            <div class="block">
+                <p>
+                    One of the definitions of a data type defines it as a set of values plus operations to work with them.
+                    While the <strong>C</strong> language provides a set of built-in types, such as <i>int</i>, <i>float</i>, and <i>char</i>, to name just a few, sometimes it is necessary to implement your own custom data type. In this cheat sheet-style note, 
+                    I would like to describe the process of writing a data type for a linked list, both for anyone reading this and as a reminder for my future self.
+                </p>
+            </div>
+
+            <div class="block">
+                <p>
+                    The style I had been sticking to is somewhat resembles <i>Object-Oriented Programming</i> (OOP) in <strong>C++</strong>, 
+                    paricularly in its use of virtual tables to facilitate dynamic linkage. The material covered here does not pretend to be "the only right way to do this", nor is it comprehensive. I believe there might be bugs I am not aware of, so whoever is reading it, please, let me know if you find any. Without further ado, let's dive into the learning!
+                </p>
+            </div>
+        </section>
+
+        <section class="section content" style="background-color: rgb(250, 250, 250);">
+
+            <h3 class="block is-size-3">Defining a Data Type</h3>
+
+            <div class="block">
+                <p>
+                        First of all, think of a name for a data type you would like to construct. For this example, I will create a data type that describes a <strong>person</strong>. Here, I define a generic pointer that is going to point to a 
+                        structure containing methods for the data type:
+                </p>
+            </div>
+
+            <div class="block">
+                <pre id="person">
+<span class="has-text-danger">extern const</span> <span class="has-text-link">void*</span> <span class="has-text-primary">Person</span>;
+                </pre>
+            </div>
+
+            <div class="block">
+                <p>
+                        Here is the actual implementation:
+                </p>
+            </div>
+
+            <div class="block">
+                <pre>
+<span class="has-text-danger">struct</span> <span class="has-text-primary">__Person</span> {
+    
+    <span class="has-text-link">void*</span> <span class="has-text-grey">data_type</span>;
+    
+    <span class="has-text-link">char*</span> <span class="has-text-grey">first_name</span>;
+    <span class="has-text-link">unsigned int</span> <span class="has-text-grey">age</span>;
+};
+                </pre>
+            </div>
+
+            <div class="block">
+                <p>
+                        The first field, <i><b>data_type</b></i>, is a pointer to the virtual table describing the actions available on this data type, <i><b>Person</b></i> in this case. This must be the first field in the structure. The remaining fields are straightforward.
+                </p>
+            </div>
+        </section>
+        
+        <section class="section content">
+            <h3 class="block is-size-3">Defining Methods</h3>
+            
+            <div class="block">
+                <p>
+                    Before implementing the methods for the data type, it is worth taking a look at what our data type description (a.k.a. class) looks like:
+                </p>
+            </div>
+            
+            <div class=block>
+                <pre id="data_type">
+<span class="has-text-link">struct</span> <span class="has-text-primary">Data_Type</span> {
+    
+    <span class="has-text-link">size_t</span> <span class="has-text-grey">size_in_bytes</span>;
+
+    <span class="has-text-link">void*</span> (<span class="has-text-primary">*constructor</span>)(<span class="has-text-link">void*</span> <span class="has-text-grey">self</span>, <span class="has-text-link">va_list*</span> <span class="has-text-grey">app</span>);
+    <span class="has-text-link">void*</span> (<span class="has-text-primary">*destructor</span>)(<span class="has-text-link">void*</span> <span class="has-text-grey">self</span>);
+    <span class="has-text-link">void*</span> (<span class="has-text-primary">*how_to_print_it</span>)(<span class="has-text-link">const void*</span> <span class="has-text-grey">self</span>);
+    <span class="has-text-link">void*</span> (<span class="has-text-primary">*compare</span>)(<span class="has-text-link">const void*</span> <span class="has-text-grey">self</span>, <span class="has-text-link">va_list*</span> <span class="has-text-grey">app</span>);
+};
+                </pre>
+            </div>
+            
+            <div class="block">
+                <p>
+                    The four function pointers, or methods, define how to <i>initialize</i>, <i>deinitialize</i>, <i>print</i>, and <i>compare</i> our data type respectively.
+                </p>
+                
+                <p>
+                    A <i><b>constructor</b></i> is used to initialize object of a data type. Whenever we want to add a new instance of this data type to a list, we call a function that invokes the constructor, passing paramters to initialize the object's data.
+                </p>
+                
+                <p>
+                    A <i><b>destructor</b></i> is used to clean up resources when those objects are destroyed. Every time we want to delete an object, we call a function that invokes its destructor to reclaim resources.
+                </p>
+                
+                <p>
+                    The <i><b>how_to_print_it</b></i> function describes the way the data type should be displayed.
+                </p>
+                
+                <p>
+                   The <i><b>compare</b></i> function allows us to evaluate whether two values of the same data type match. This function is 
+                    used when we search a list for a particular element with the desired data.
+                </p>
+            </div>
+        </section>
+        
+        <section class="section content" style="background-color: rgb(250, 250, 250);">
+            
+            <h3 class="block is-size-3">Implementing Methods</h3>
+            
+            <div class="columns is-1">
+                
+                <div class="column">
+                    <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">constructor</p>
+                    </header>  
+                    <div class="card-content">
+                        <div class="content">          
+                            <pre>
+<span class="has-text-danger">static</span> <span class="has-text-link">void*</span> <span class="has-text-info">_Person_constructor</span>(<span class="has-text-link">void*</span> _self, <span class="has-text-link">va_list*</span> app) {
+
+    <span class="has-text-danger">struct</span> __Person* self = _self;
+
+    <span class="has-text-link">char*</span> first_name = <span class="has-text-info">va_arg</span>(*app, <span class="has-text-link">char*</span>);
+    <span class="has-text-link">unsigned int</span> age = <span class="has-text-info">va_arg</span>(*app,  <span class="has-text-link">unsigned int</span>);
+
+    <span class="has-text-danger">if</span> ((self->first_name = <span class="has-text-info">malloc</span>(<span class="has-text-info">sizeof</span>(<span class="has-text-link">char</span>) * 32)) == <span class="has-text-link">NULL</span>)
+    {
+        <span class="has-text-danger">return</span> <span class="has-text-link">NULL</span>;
+    }
+
+    <span class="has-text-info">strncpy</span>(self->first_name, first_name, 32);
+    self->first_name[<span class="has-text-info">strlen</span>(self->first_name)] = '\0';
+
+    self->age = age;
+
+    <span class="has-text-danger">return</span> self;
+}
+                            </pre>
+                        </div>
+                    
+                    
+                        <div class="content">
+                            <p>
+                                We pass a generic pointer (<i><b>_self</b></i>) to the constructor that points to the location of our previously allocated object of type <i><b>Person</b></i>. This pointer also corresponds to the location of the first field of the structure, specifically <i><b>data_type</b></i>. We then cast a pointer to our data type treating it as if it points to the <i><b>Person</b></i> data type (which it does).
+                            </p>
+                            
+                            <p>
+                                After retrieving a person's name and age, we allocate memory to copy the name into the allocated space and assign the person's age.
+                            </p>
+                        </div>
+                        
+                    </div>
+                </div>
+                </div>
+                
+                <!-- -->
+                
+                <div class="column">
+                    <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">destructor</p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">
+                            <pre>
+<span class="has-text-danger">static</span> <span class="has-text-link">void*</span> <span class="has-text-info">_String_destructor</span>(<span class="has-text-link">void*</span> _self) {
+
+    <span class="has-text-danger">struct</span> __Person* self = _self;
+
+    <span class="has-text-info">free</span>(self->first_name);
+    self->first_name = <span class="has-text-link">NULL</span>;
+
+    <span class="has-text-danger">return</span> self;
+}
+                            </pre>
+                            
+                        </div>
+                        
+                        <div class="content">
+                            <p>
+                                In the destructor, we must reclaim all memory allocated in the constructor, if any, and perform any necessary clenup.
+                                Since we allocated memory for the person's first name, we free it in the destructor.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+            <div class="columns is-1">
+                
+                <div class="column">
+                    <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">how_to_print_it</p>
+                    </header>
+                    
+                    <div class="card-content">
+                        <div class="content">
+                            <pre>
+<span class="has-text-danger">static</span> <span class="has-text-link">void*</span> <span class="has-text-info">_Person_print</span>(<span class="has-text-link">const void*</span> _self) {
+
+    <span class="has-text-danger">const struct</span> __Person* self = _self;
+
+    <span class="has-text-info">printf</span>(<span class="has-text-warning">"%s, %u"</span>, self->first_name, self->age);
+}
+                            </pre>
+                        </div>
+                    
+                    
+                        <div class="content">
+                            <p>
+                                We pass a generic pointer (<i><b>_self</b></i>) to the constructor that points to the location of our previously allocated object of type <i><b>Person</b></i>. This pointer also corresponds to the location of the first field of the structure, specifically <i><b>data_type</b></i>. We then cast a pointer to our data type treating it as if it points to the <i><b>Person</b></i> data type (which it does).
+                            </p>
+                            
+                            <p>
+                                After retrieving a person's name and age, we allocate memory to copy the name into the allocated space and assign the person's age.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">compare</p>
+                        </header>
+                    
+                        <div class="card-content">
+                            <div class="content">
+                                <pre>
+<span class="has-text-danger">static</span> <span class="has-text-link">int</span> <span class="has-text-info">_Person_compare</span>(<span class="has-text-link">const void*</span> _self, <span class="has-text-link">va_list*</span> app) {
+
+    <span class="has-text-danger">const struct</span> __Person* self = _self;
+    
+    <span class="has-text-link">char*</span> first_name = <span class="has-text-info">va_arg</span>(*app, <span class="has-text-link">char*</span>);
+    <span class="has-text-link">unsigned int</span> age = <span class="has-text-info">va_arg</span>(*app, <span class="has-text-link">unsigned int</span>);
+
+    <span class="has-text-danger">return</span> !((<span class="has-text-info">strcmp</span>(self->first_name, first_name) == 0) && (self->age == age));
+}
+                                </pre>
+                            </div>
+
+
+                            <div class="content">
+                                <p>
+                                    In our implementation of the compare function, we extract the first name and age of a person and check 
+                                    if the data matches what the current persons possesses. Keep in mind that it is important for a function to return 0 
+                                    to indicate that the data match.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section content">
+            
+            <h3 class="block is-size-3">Bringing a Data Type to Life</h3>
+            
+            <div class="block">
+                <p>
+                    Once we have implemented the data types' methods, it is time to tell the environment about the new data type that has 
+                    been created. To do so, I create a structure of type <a href="#data_type"><i><b>Data_Type</b></i></a> named <i>_Person</i> and initialize it with the 
+                    methods we implemented above:
+                </p>
+            </div>
+            
+            <div class="block">
+                <pre>
+<span class="has-text-danger">static struct</span> Data_Type _Person = {
+    .size_in_bytes = <span class="has-text-link">sizeof</span>(<span class="has-text-link">struct</span> __Person),
+    .constructor = _Person_constructor,
+    .destructor = _Person_destructor,
+    .how_to_print_it = _Person_print,
+    .compare = _Person_compare,
+};
+                </pre>
+            </div>
+            
+            <div class="block">
+                <p>
+                    And then we assign the address of the structure to the <a href="#person"><i><b>Person</b></i></a> variable we defined at the very beginning:
+                </p>
+            </div>
+            
+            <div class="block">
+                <pre>
+<span class="has-text-danger">const</span> <span class="has-text-link">void*</span> Person = &_Person;
+                </pre>
+            </div>
+        </section>
+        
+        <section class="section content" style="background-color: rgb(250, 250, 250);">
+            
+            <h3 class="block is-size-3">Putting Everything Together</h3>
+            
+            <div class="block">
+                <p>
+                    Let's write a simple use case of our newly constructed data type now. First of all, we are going to create a singly-linked list (because it is the only list currently supported). The list follows the same logic as the previously described data type regarding its internal representation; however, I will not cover it here. I described the process of creating a data type that represents a person. The code also includes a couple of additional data types implemented in the same way: <i>Integer</i>, <i>Float</i>, and <i>String</i>. Let's use them as well.
+                </p>
+                
+                <p>
+                    <strong>It might not be the best option here because I believe it violates the principles of separation of concerns, leading to the need to add code each time a new data type is developed for working with a list. However, to make a list to recognize our data type, we will need to add the following snippet in every function that handles data insertion:</strong>
+                </p>
+                
+                <pre>
+<span class="has-text-link">char</span> d = (*(<span class="has-text-danger">struct</span> Data_Type**) element_type_ptr == String) || (*(<span class="has-text-danger">struct</span> Data_Type**) element_type_ptr == Integer) || (*(<span class="has-text-danger">struct</span> Data_Type**) element_type_ptr == Float) || (*(<span class="has-text-danger">struct</span> Data_Type**) element_type_ptr == Person);
+                </pre>
+                
+                <p>where <i>element_type_ptr</i> is one of the data types <a href="#person">we define</a>.</p>
+            </div>
+            
+            <div class="columns is-1">
+                <div class="column">
+                    <div class="card block">
+                        <div class="card-content">
+                            <pre>
+<span class="has-text-grey-dark">/* Somewhere in the main function */</span>
+
+<span class="has-text-link">void*</span> list = <span class="has-text-info">List_new</span>(List);
+
+<span class="has-text-grey-dark">/* Adding some strings to the list */</span>
+<span class="has-text-info">List_insert_first</span>(list, <span class="has-text-info">Data_new</span>(String, <span class="has-text-warning">"Maria"</span>));
+<span class="has-text-info">List_insert_first</span>(list, <span class="has-text-info">Data_new</span>(String, <span class="has-text-warning">"Elizabeth"</span>));
+<span class="has-text-info">List_insert_first</span>(list, <span class="has-text-info">Data_new</span>(String, <span class="has-text-warning">"Katherine"</span>));
+
+<span class="has-text-info">List_print</span>(list);
+
+<span class="has-text-grey-dark">/*
+Output: 
+Maria -> Elizabeth -> Katherine
+*/</span>
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="card block">
+                        <div class="card-content">
+                            <pre>
+<span class="has-text-info">List_insert_last</span>(list, Data_new(Float, -1.123));
+
+<span class="has-text-info">List_print</span>(list);
+
+<span class="has-text-grey-dark">/*
+Output: 
+Maria -> Elizabeth -> Katherine -> -1.12
+*/</span>
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="columns is-1">
+                <div class="column">
+                    <div class="card block">
+                        <div class="card-content">
+                            <pre>
+<span class="has-text-info">List_insert_first</span>(list, <span class="has-text-info">Data_new</span>(Person, <span class="has-text-warning">"Jack"</span>, 54));
+
+<span class="has-text-grey-dark">/*
+Output: 
+Jack, 54 -> Maria -> Elizabeth -> Katherine -> -1.12
+*/</span>
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="card block">
+                        <div class="card-content">
+                            <pre>
+s = <span class="has-text-info">List_find</span>(list, Person, <span class="has-text-warning">"Jack"</span>, 54);
+<span class="has-text-danger">if</span> (s != <span class="has-text-link">NULL</span>) {
+    <span class="has-text-info">Data_print</span>(s);
+    <span class="has-text-info">puts</span>("");
+}
+
+<span class="has-text-grey-dark">/*
+Output: 
+Jack, 54
+*/</span>
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="block">
+                <p>
+                    That is basically it! For more information, take a look at the source code, or you can wait until I write the propper documentation 
+                    for the entire project.
+                </p>
+            </div>
+            
+        </section>
+    </body>
+</html>
