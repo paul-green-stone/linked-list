@@ -1,18 +1,19 @@
 #include <stddef.h>
-#include <assert.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
-#include "_List.h"
-#include "../Types.h"
-#include "../Types/_Data_Type.h"
+#include "../../include/_List.h"
+#include "../../include/_Data_Type.h"
+#include "../../include/Types.h"
+#include "../../include/Data_Type.h"
 
 /* ================================================================ */
 
 /**
  * A singly-linked list node.
  */
-static struct __Node {
+struct __Node {
 
     struct __Node* next;
     void* data;
@@ -58,13 +59,15 @@ void List_delete(void* list) {
 
 /* ================================ */
 
-size_t List_size(const void* _list) {
+ssize_t List_size(const void* _list) {
 
     const struct Linked_List_Type* const* list = _list;
 
     if ((_list != NULL) && (*list != NULL) && ((*list)->get_size != NULL)) {
         return (*list)->get_size(_list);
     }
+
+    return -1;
 }
 
 /* ================================ */
@@ -107,7 +110,7 @@ void List_print(const void* _list) {
     const struct Linked_List_Type* const* list = _list;
 
     if ((_list != NULL) && (*list != NULL) && ((*list)->print != NULL)) {
-        return (*list)->print(_list);
+        (*list)->print(_list);
     }
 }
 
@@ -162,6 +165,22 @@ void* List_find(const void* _list, const void* type, ...) {
     }
 
     return result;
+}
+
+/* ================================ */
+
+void* List_remove(void* _list, void* _data) {
+
+    struct Linked_List_Type** list = _list;
+    void* data = NULL;
+
+    if ((_list != NULL) && (*list != NULL) && ((*list)->remove_element != NULL)) {
+    
+        data = (*list)->remove_element(list, _data);
+        Data_delete(data);
+    }
+
+    return data;
 }
 
 /* ================================================================ */

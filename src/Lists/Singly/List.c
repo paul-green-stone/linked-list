@@ -1,21 +1,32 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
-#include "_List.h"
-#include "../Types/_Data_Type.h"
-#include "../Data_Type.h"
+#include "../../../include/_List.h"
+#include "../../../include/_Data_Type.h"
+#include "../../../include/Data_Type.h"
+
+/* ================================================================ */
+/* ===== The search operations use these variables as a cache ===== */
+/* = to store nodes that may be removed after a successful search = */
+/* ================================================================ */
+
+static struct __Node* temporary = NULL;
+static struct __Node* before_temporary = NULL;
 
 /* ================================================================ */
 
 /**
  * A singly-linked list node.
  */
-static struct __Node {
+struct __Node {
 
     struct __Node* next;    
     void* data;
 };
+
+/* ================================ */
 
 static struct __Node* Node_new(void* data) {
 
@@ -31,7 +42,9 @@ static struct __Node* Node_new(void* data) {
     return node;
 }
 
-/* ================================ */
+/* ================================================================ */
+/* ================== SINGLY-LINKED LIST METHODS ================== */
+/* ================================================================ */
 
 /* A singly-linked list */
 struct __List {
@@ -48,9 +61,19 @@ struct __List {
 /* ================================ */
 
 /**
- * The `get_size` implementation for a singly-linked list
+ * A singly linked list constructor
  */
-static size_t get_size(const void* _self) {
+static void* ctor(void* _self, va_list* app) {
+
+    return _self;
+}
+
+/* ================================ */
+
+/**
+ * A functiong for getting the number of elements in the list
+ */
+static ssize_t get_size(const void* _self) {
 
     const struct __List* self = _self;
 
@@ -60,7 +83,7 @@ static size_t get_size(const void* _self) {
 /* ================================ */
 
 /**
- * The `remove_first` implementation for a singly-linked list
+ * A function for deleting elements from the beginning
  */
 static void* remove_first(void* _self) {
     
@@ -90,9 +113,9 @@ static void* remove_first(void* _self) {
 /* ================================ */
 
 /**
- * The `destructor` implementation for a singly-linked list
+ * A singly-linked list destructor
  */
-static void* destructor(void* _self) {
+static void* dtor(void* _self) {
 
     struct __List* self = _self;
     void* element = NULL;
@@ -108,7 +131,7 @@ static void* destructor(void* _self) {
 /* ================================ */
 
 /**
- * The `insert_first` implementation for a singly-linked list
+ * A funtion for inserting elements at the beginning
  */
 void* insert_first(void* _self, const void* _element) {
 
@@ -131,7 +154,7 @@ void* insert_first(void* _self, const void* _element) {
 /* ================================ */
 
 /**
- * The 'print` implementation for a singly-linked list
+ * A function for displaying data contained in the list
  */
 void print(const void* _self) {
 
@@ -158,7 +181,7 @@ void print(const void* _self) {
 /* ================================ */
 
 /**
- * The `insert_last` implementation for a singly-linked list
+ * A function for inserting elements at the end
  */
 void* insert_last(void* _self, const void* element) {
 
@@ -181,7 +204,7 @@ void* insert_last(void* _self, const void* element) {
 /* ================================ */
 
 /**
- * The `remove_last` implementation for a singly-linked list
+ * A function for deleting elements from the end
  */
 void* remove_last(void* _self) {
 
@@ -214,6 +237,9 @@ void* remove_last(void* _self) {
 
 /* ================================ */
 
+/**
+ * A function for searching data in the list
+ */
 void* find(const void* _self, const void* type, va_list* app) {
 
     const struct __List* self = _self;
@@ -225,16 +251,23 @@ void* find(const void* _self, const void* type, va_list* app) {
 
     if (self->count > 0) {
 
-        for (node = self->head; i < self->count || node != NULL; i++, node = node->next) {
+        for (temporary = node = self->head; i < self->count || node != NULL; i++, temporary = node = node->next) {
 
             if ((*(const struct Data_Type**) node->data) == type) {
 
-                va_copy(&app_copy, *app);
+                #ifdef va_copy
+                    va_list ap;
+                    va_copy(ap, *app);
+                #else
+                    va_list ap = *app;
+                #endif
 
-                if ((*(const struct Data_Type**) node->data)->compare(node->data, &app_copy) == 0) {
+                if ((*(const struct Data_Type**) node->data)->compare(node->data, &ap) == 0) {
                     return node->data;
                 }
             }
+
+            before_temporary = temporary;
         }
 
         va_end(app_copy);
@@ -243,12 +276,66 @@ void* find(const void* _self, const void* type, va_list* app) {
     return NULL;
 }
 
+/* ================================ */
+
+/**
+ * A singly-linked list function for removing the given element from the list
+ * (if it exists in the list)
+ */
+void* remove_element(void* _self, void* _data) {
+
+    struct __List* self = _self;
+    struct __Node* current = NULL;
+    struct __Node* previous = NULL;
+    void* data = NULL;
+
+    size_t i = 0;
+
+    if (self->count > 0) {
+
+        if (_data == self->head->data) {
+            return remove_first(_self);
+        }
+        else if (_data == self->tail->data) {
+            return remove_last(_self);
+        }
+        /* Delete the element that has just been found */
+        else if (temporary->data == _data) {
+
+            before_temporary->next = temporary->next;
+            /* Data stored in the node */
+            data = temporary->data;
+
+            free(temporary);
+        }
+        else {
+            for (previous = self->head, current = previous->next; current->data != _data || i < self->count; i++, previous = current, current = current->next) ;
+
+            if (current == NULL) {
+                return NULL;
+            }
+
+            before_temporary->next = current->next;
+            data = current->data;
+            free(current);
+        }
+
+        self->count--;
+    }
+
+    return data;
+}
+
+
+/* ================================================================ */
+/* ======================== INITIALIZATION ======================== */
 /* ================================================================ */
 
 const struct Linked_List_Type _List = {
+
     .size = sizeof(struct __List),
-    .constructor = NULL,
-    .destructor = destructor,
+    .constructor = ctor,
+    .destructor = dtor,
     .print = print,
     .insert_first = insert_first,
     .remove_first = remove_first,
@@ -256,6 +343,7 @@ const struct Linked_List_Type _List = {
     .insert_last = insert_last,
     .remove_last = remove_last,
     .find = find,
+    .remove_element = remove_element,
 };
 
 const void* List = &_List;

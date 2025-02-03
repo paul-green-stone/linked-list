@@ -1,5 +1,5 @@
-#ifndef __DATA_TYPE_H
-#define __DATA_TYPE_H
+#ifndef __DATA_TYPE_REPRESENTATION_H
+#define __DATA_TYPE_REPRESENTATION_H
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -18,4 +18,4 @@ struct Data_Type {
 
 /* ================================================================ */
 
-#endif /* __DATA_TYPE_H */
+#endif /* __DATA_TYPE_REPRESENTATION_H */

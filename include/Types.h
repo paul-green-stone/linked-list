@@ -15,6 +15,7 @@ extern const void* Integer;
 /* A float data type */
 extern const void* Float;
 
+/* An example of a custom data type */
 extern const void* Person;
 
 /* ================================================================ */

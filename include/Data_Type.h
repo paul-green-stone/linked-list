@@ -1,5 +1,5 @@
-#ifndef _DATA_H
-#define _DATA_H
+#ifndef _DATA_TYPE_INTERFACE_H
+#define _DATA_TYPE_INTERFACE_H
 
 /* ================================================================ */
 
@@ -24,4 +24,4 @@ void Data_print(const void* dt);
 
 /* ================================================================ */
 
-#endif /* _DATA_H */
+#endif /* _DATA_TYPE_INTERFACE_H */

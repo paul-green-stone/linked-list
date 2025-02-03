@@ -10,6 +10,8 @@
     </head>
     <!-- -->
     <body>
+
+        <!-- This is a hero section that highlights the heading -->
         <section class="hero is-halfheight card" style="background-color: rgb(250, 250, 250);">
             <div class="hero-body">
                 <div>
@@ -19,6 +21,7 @@
             </div>
         </section>
 
+        <!-- Introduction -->
         <section class="section content">
 
             <h3 class="block is-size-3">Introduction</h3>
@@ -37,8 +40,10 @@
                     paricularly in its use of virtual tables to facilitate dynamic linkage. The material covered here does not pretend to be "the only right way to do this", nor is it comprehensive. I believe there might be bugs I am not aware of, so whoever is reading it, please, let me know if you find any. Without further ado, let's dive into the learning!
                 </p>
             </div>
+
         </section>
 
+        <!-- Defining a data type -->
         <section class="section content" style="background-color: rgb(250, 250, 250);">
 
             <h3 class="block is-size-3">Defining a Data Type</h3>
@@ -58,48 +63,47 @@
 
             <div class="block">
                 <p>
-                        Here is the actual implementation:
+                    Here is the actual implementation:
                 </p>
-            </div>
 
-            <div class="block">
                 <pre>
 <span class="has-text-danger">struct</span> <span class="has-text-primary">__Person</span> {
-    
-    <span class="has-text-link">void*</span> <span class="has-text-grey">data_type</span>;
-    
-    <span class="has-text-link">char*</span> <span class="has-text-grey">first_name</span>;
-    <span class="has-text-link">unsigned int</span> <span class="has-text-grey">age</span>;
+                        
+<span class="has-text-link">void*</span> <span class="has-text-grey">data_type</span>;
+                        
+<span class="has-text-link">char*</span> <span class="has-text-grey">first_name</span>;
+<span class="has-text-link">unsigned int</span> <span class="has-text-grey">age</span>;
 };
                 </pre>
             </div>
 
             <div class="block">
                 <p>
-                        The first field, <i><b>data_type</b></i>, is a pointer to the virtual table describing the actions available on this data type, <i><b>Person</b></i> in this case. This must be the first field in the structure. The remaining fields are straightforward.
+                    The first field, <i><b>data_type</b></i>, is a pointer to the virtual table describing the actions available on this data type, <i><b>Person</b></i> in this case. This must be the first field in the structure. The remaining fields are straightforward.
                 </p>
             </div>
+
         </section>
         
+        <!-- Defining Methods -->
         <section class="section content">
+
             <h3 class="block is-size-3">Defining Methods</h3>
             
             <div class="block">
                 <p>
                     Before implementing the methods for the data type, it is worth taking a look at what our data type description (a.k.a. class) looks like:
                 </p>
-            </div>
-            
-            <div class=block>
+
                 <pre id="data_type">
 <span class="has-text-link">struct</span> <span class="has-text-primary">Data_Type</span> {
-    
-    <span class="has-text-link">size_t</span> <span class="has-text-grey">size_in_bytes</span>;
-
-    <span class="has-text-link">void*</span> (<span class="has-text-primary">*constructor</span>)(<span class="has-text-link">void*</span> <span class="has-text-grey">self</span>, <span class="has-text-link">va_list*</span> <span class="has-text-grey">app</span>);
-    <span class="has-text-link">void*</span> (<span class="has-text-primary">*destructor</span>)(<span class="has-text-link">void*</span> <span class="has-text-grey">self</span>);
-    <span class="has-text-link">void*</span> (<span class="has-text-primary">*how_to_print_it</span>)(<span class="has-text-link">const void*</span> <span class="has-text-grey">self</span>);
-    <span class="has-text-link">void*</span> (<span class="has-text-primary">*compare</span>)(<span class="has-text-link">const void*</span> <span class="has-text-grey">self</span>, <span class="has-text-link">va_list*</span> <span class="has-text-grey">app</span>);
+                        
+<span class="has-text-link">size_t</span> <span class="has-text-grey">size_in_bytes</span>;
+                    
+<span class="has-text-link">void*</span> (<span class="has-text-primary">*constructor</span>)(<span class="has-text-link">void*</span> <span class="has-text-grey">self</span>, <span class="has-text-link">va_list*</span> <span class="has-text-grey">app</span>);
+<span class="has-text-link">void*</span> (<span class="has-text-primary">*destructor</span>)(<span class="has-text-link">void*</span> <span class="has-text-grey">self</span>);
+<span class="has-text-link">void*</span> (<span class="has-text-primary">*how_to_print_it</span>)(<span class="has-text-link">const void*</span> <span class="has-text-grey">self</span>);
+<span class="has-text-link">void*</span> (<span class="has-text-primary">*compare</span>)(<span class="has-text-link">const void*</span> <span class="has-text-grey">self</span>, <span class="has-text-link">va_list*</span> <span class="has-text-grey">app</span>);
 };
                 </pre>
             </div>

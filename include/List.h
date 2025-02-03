@@ -1,7 +1,7 @@
-#ifndef _LINKED_LIST_ADT_H
-#define _LINKED_LIST_ADT_H
+#ifndef _LINKED_LIST_INTERFACE_H
+#define _LINKED_LIST_INTERFACE_H
 
-#include "src/Data_Type.h"
+#include <sys/types.h>
 
 /* ================================================================ */
 /* ========================== INTERFACE =========================== */
@@ -53,7 +53,7 @@ void* List_insert_last(void* list, const void* element);
 /**
  * The functions returns the number of elements in the list.
  */
-size_t List_size(const void* list);
+ssize_t List_size(const void* list);
 
 /* ================================ */
 
@@ -62,6 +62,13 @@ size_t List_size(const void* list);
  */
 void* List_find(const void* list, const void* type, ...);
 
+/* ================================ */
+
+/**
+ * The function for removing the given element from the list
+ */
+void* List_remove(void* list, void* data);
+
 /* ================================================================ */
 
-#endif /* _LINKED_LIST_ADT_H */
+#endif /* _LINKED_LIST_INTERFACE_H */
