@@ -22,19 +22,18 @@ int main(int argc, char** argv) {
 
     List_print(list);
 
-    void* s = List_find(list, String, "Maria");
-    if (s != NULL) {
-        Data_print(s);
+    void* data;
+    while ((data = List_next(list)) != NULL) {
+        Data_print(data);
         puts("");
     }
 
-    List_print(list);
-    printf("%d\n", List_size(list));
-    void* d = List_remove(list, s);
+    puts("");
 
-    printf("%d\n", List_size(list));
-
-    List_print(list);
+    while ((data = List_next(list)) != NULL) {
+        Data_print(data);
+        puts("");
+    }
 
     List_delete(list);
 

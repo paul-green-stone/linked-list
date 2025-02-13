@@ -77,12 +77,6 @@ void* List_insert_first(void* _list, const void* _element) {
     const struct Linked_List_Type* const* list = _list;
     const struct Data_Type* const* element_type_ptr = _element;
 
-    char d = (*(struct Data_Type**) element_type_ptr == String) || (*(struct Data_Type**) element_type_ptr == Integer) || (*(struct Data_Type**) element_type_ptr == Float) || (*(struct Data_Type**) element_type_ptr == Person);
-
-    if (!d) {
-        return NULL;
-    }
-
     if ((_list != NULL) && (*list != NULL) && ((*list)->insert_first != NULL)) {
         return (*list)->insert_first(_list, _element);
     }
@@ -121,12 +115,6 @@ void* List_insert_last(void* _list, const void* _element) {
     const struct Linked_List_Type* const* list = _list;
     const struct Data_Type* const* element_type_ptr = _element;
 
-    char d = (*(struct Data_Type**) element_type_ptr == String) || (*(struct Data_Type**) element_type_ptr == Integer) || (*(struct Data_Type**) element_type_ptr == Float) || (*(struct Data_Type**) element_type_ptr == Person);
-
-    if (!d) {
-        return NULL;
-    }
-
     if ((_list != NULL) && (*list != NULL) && ((*list)->insert_first != NULL)) {
         return (*list)->insert_last(_list, _element);
     }
@@ -159,7 +147,7 @@ void* List_find(const void* _list, const void* type, ...) {
         va_list ap;
         va_start(ap, type);
 
-        result = (*list)->find(list, type, &ap);
+        result = (*list)->find(_list, type, &ap);
 
         va_end(ap);
     }
@@ -176,11 +164,25 @@ void* List_remove(void* _list, void* _data) {
 
     if ((_list != NULL) && (*list != NULL) && ((*list)->remove_element != NULL)) {
     
-        data = (*list)->remove_element(list, _data);
+        data = (*list)->remove_element(_list, _data);
         Data_delete(data);
     }
 
     return data;
+}
+
+/* ================================ */
+
+void* List_next(const void* _list) {
+    
+    struct Linked_List_Type** list = (void*) _list;
+
+    if ((_list != NULL) && (*list != NULL) && ((*list)->get_next != NULL)) {
+        
+        return (*list)->get_next((void*) _list);
+    }
+
+    return NULL;
 }
 
 /* ================================================================ */

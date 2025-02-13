@@ -69,6 +69,15 @@ void* List_find(const void* list, const void* type, ...);
  */
 void* List_remove(void* list, void* data);
 
+/* ================================ */
+
+/**
+ * The function retrieves successive elements from a list.
+ * Inserting nodes between these retrievals can cause data loss if
+ * an insertion occurs at what was previously the current node's position.
+ */
+void* List_next(const void* List);
+
 /* ================================================================ */
 
 #endif /* _LINKED_LIST_INTERFACE_H */

@@ -30,7 +30,9 @@ struct Linked_List_Type {
     /* How to find data in the list */
     void* (*find)          (const void* self, const void* type, va_list* app);
     /* How to delete element from the list */
-    void* (*remove_element)(void* list, void* data);
+    void* (*remove_element)(void* self, void* data);
+    /* How to retreive the next element from the list */
+    void* (*get_next)(void* self);
 
     /* How to print the list */
     void (*print)          (const void* self);

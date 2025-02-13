@@ -50,6 +50,7 @@ static struct __Node* Node_new(void* data) {
 struct __List {
 
     const void* vtable;
+    struct __Node* next;
 
     /* Number of elements in the list */
     size_t count;
@@ -98,6 +99,7 @@ static void* remove_first(void* _self) {
 
         if (self->count == 1) {
             self->head = self->tail = NULL;
+            self->next = NULL;
         }
         else {
             self->head = node->next;
@@ -131,15 +133,16 @@ static void* dtor(void* _self) {
 /* ================================ */
 
 /**
- * A funtion for inserting elements at the beginning
+ * A function for inserting elements at the beginning
  */
-void* insert_first(void* _self, const void* _element) {
+static void* insert_first(void* _self, const void* _element) {
 
     struct __List* self = _self;
     struct __Node* node = Node_new((void*) _element);
 
     if (self->count == 0) {
         self->head = self->tail = node;
+        self->next = self->head;
     }
     else {
         node->next = self->head;
@@ -156,7 +159,7 @@ void* insert_first(void* _self, const void* _element) {
 /**
  * A function for displaying data contained in the list
  */
-void print(const void* _self) {
+static void print(const void* _self) {
 
     const struct __List* self = _self;
     struct __Node* node;
@@ -183,13 +186,14 @@ void print(const void* _self) {
 /**
  * A function for inserting elements at the end
  */
-void* insert_last(void* _self, const void* element) {
+static void* insert_last(void* _self, const void* element) {
 
     struct __List* self = _self;
     struct __Node* node = Node_new((void*) element);
 
     if (self->count == 0) {
         self->head = self->tail = node;
+        self->next = self->head;
     }
     else {
         self->tail->next = node;
@@ -206,7 +210,7 @@ void* insert_last(void* _self, const void* element) {
 /**
  * A function for deleting elements from the end
  */
-void* remove_last(void* _self) {
+static void* remove_last(void* _self) {
 
     struct __List* self = _self;
     struct __Node* node = NULL;
@@ -219,6 +223,7 @@ void* remove_last(void* _self) {
 
         if (self->count == 1) {
             self->head = self->tail = NULL;
+            self->next = NULL;
         }
         else {
             while (node->next != self->tail) node = node->next;
@@ -240,7 +245,7 @@ void* remove_last(void* _self) {
 /**
  * A function for searching data in the list
  */
-void* find(const void* _self, const void* type, va_list* app) {
+static void* find(const void* _self, const void* type, va_list* app) {
 
     const struct __List* self = _self;
     struct __Node* node = NULL;
@@ -282,7 +287,7 @@ void* find(const void* _self, const void* type, va_list* app) {
  * A singly-linked list function for removing the given element from the list
  * (if it exists in the list)
  */
-void* remove_element(void* _self, void* _data) {
+static void* remove_element(void* _self, void* _data) {
 
     struct __List* self = _self;
     struct __Node* current = NULL;
@@ -326,6 +331,23 @@ void* remove_element(void* _self, void* _data) {
     return data;
 }
 
+/* ================================ */
+
+static void* get_next(void* _self) {
+
+    struct __List* self = _self;
+    void* data = NULL;
+
+    data = (self->next != NULL) ? self->next->data : NULL;
+
+    if (data != NULL) {
+        self->next = self->next->next;
+    } else {
+        self->next = self->head;
+    }
+
+    return data;
+} 
 
 /* ================================================================ */
 /* ======================== INITIALIZATION ======================== */
@@ -344,6 +366,7 @@ const struct Linked_List_Type _List = {
     .remove_last = remove_last,
     .find = find,
     .remove_element = remove_element,
+    .get_next = get_next,
 };
 
 const void* List = &_List;
